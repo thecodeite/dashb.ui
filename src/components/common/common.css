@@ -1,0 +1,13 @@
+.Dashboard-pages {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.Dashboard-pages > div {
+    width: 250px;
+    height: 350px;
+    margin: 0px;
+    padding: 10px;
+    overflow: hidden;
+}
