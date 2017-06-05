@@ -11,7 +11,16 @@ export function getResponsibilitiesAfter (responsibilities, date, count) {
 
   const intervals = responsibilities.filter(x => x.schedule).map(x => {
     const interval = makeInterval(x.schedule)
+    //console.log('interval:', interval)
+
+    //console.log(`x.schedule: »${x.schedule}«`)
+
     const firstAfter = interval.firstAfter(threeMonthsAgo)
+    if (!firstAfter) {
+      return null
+    }
+    //console.log('firstAfter:', firstAfter)
+
     return {
       id: x.id,
       name: x.name,
@@ -20,7 +29,7 @@ export function getResponsibilitiesAfter (responsibilities, date, count) {
       rIndex: firstAfter.index,
       date: firstAfter.date
     }
-  })
+  }).filter(x => x !== null)
 
   const results = []
 

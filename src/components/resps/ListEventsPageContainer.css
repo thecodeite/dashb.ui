@@ -1,0 +1,89 @@
+
+.ListEventsPage {
+  background: white;
+  padding: 5px;
+  margin: 0px;
+}
+
+.ListEventsPage > button {
+  margin: 5px;
+  width: calc(100% - 10px)
+}
+
+.ListEventsContainer {
+  padding: 5px;
+  background: #dddddd;
+  overflow-y: auto;
+  height: 270px;
+  margin: 0;
+}
+
+.ListEvents::before {
+  content: "";
+  display: block;
+  box-shadow: inset 2px 2px 4px #444;
+  position: absolute;
+  margin: 5px;
+  top: 0;
+  left: 0;
+  width: calc(100% - 10px);
+  height: 280px;
+  pointer-events: none;
+}​
+.something-after-before {
+  margin: 0;
+}
+
+.ListEvents {
+  list-style-type: none;
+  background: #dddddd;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+}
+
+ul.ListEvents > li {
+  padding: 0;
+  margin: 0;
+}
+
+.ListEvent {
+  display: block;
+  margin: 3px;
+  background: white;
+  box-shadow: 2px 2px 4px #444;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  font-size: 13px;
+  width: calc(100% - 6px);
+}
+
+.ListEvent:hover {
+  box-shadow: 3px 3px 4px #444;
+}
+
+.ListEvent-text {
+  margin-right: auto;
+  padding: 2px;
+}
+
+.ListEvent-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ListEvent-schedule {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: smaller;
+}
+
+.ListEvent-edit {
+  display: inline-block;
+  border: 0px;
+  background: transparent;
+  cursor: pointer;
+}

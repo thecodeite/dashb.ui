@@ -1,0 +1,59 @@
+
+.TabContainer {
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+}
+
+.TabBar {
+  padding: 3px 4px 0px 4px;
+  margin-bottom: 0px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.TabBar > img {
+  display: none;
+  margin: 0px 2px 0px auto;
+  padding: 0px;
+  position: relative;
+}
+
+.TabBar > img.show {
+  display: inline;
+}
+
+.Tab {
+  padding: 4px 4px 7px;
+  margin: 0px 2px;
+  background: #CDC;
+  border: 0px solid black;
+  text-decoration: none;
+  box-shadow: 2px 2px 2px #353;
+  z-index: 0;
+  position: relative;
+  border-radius: 0px 5px 0px 0px;
+  cursor: pointer;
+}
+
+.Tab:focus {
+  outline: 0;
+}
+
+.Tab.selected {
+  border-bottom: 0px solid white;
+  background: white;
+  box-shadow: 5px 5px 5px #353;
+}
+
+.TabsBody {
+  padding: 0;
+  margin: 0;
+  height: 320px;
+  position: relative;
+  z-index: 1;
+  background-color: white;
+  box-shadow: 5px 5px 5px #353;
+  overflow-y: hidden;
+}

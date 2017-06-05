@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import moment from 'moment'
+import uuid from 'uuid'
 
 import {getResponsibilitiesAfterNow} from './upcomingResponsibilitiesService'
 import './resps.css'
@@ -12,8 +13,10 @@ class Resps extends Component {
     this.state = {
       page: 'list',
       upcoming: [],
-      events: []
-      // upcoming: getResponsibilitiesAfterNow(Object.keys(d).map(k => d[k]), 10)
+      events: [],
+      editing: false,
+      adding: false,
+      working: false
     }
   }
 
@@ -23,14 +26,113 @@ class Resps extends Component {
     })
       .then(res => res.json())
       .then(events => {
-        events = Object.values(events)
-        console.log('events:', events)
+        events = Object.keys(events).map(id => ({id, ...events[id]}))
+        // console.log('events:', events)
 
         this.setState({
           events,
           upcoming: getResponsibilitiesAfterNow(events, 8)
+        }, () => false && this.startEditing('aba9c120-fce8-11e6-906b-db4fba41b822'))
+      })
+  }
+
+  startEditing = (idToEdit) => {
+    const editing = this.state.events.find(x => x.id === idToEdit)
+    this.setState({
+      page: 'edit',
+      editing: true
+    })
+  }
+
+  saveEditing = event => {
+    console.log('saveEditing event:', event)
+
+    this.setState({working: true})
+
+    const id = event.id
+    const update = {
+      id,
+      name: event.name,
+      schedule: event.schedule
+    }
+    console.log('update:', update)
+
+    fetch(`https://lists.codeite.aq/list/~/resps/_/${id}`, {
+      method: 'PATCH',
+      credentials: 'include',
+      headers:{
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(update)
+    })
+      .then(res => {if(!res.ok) throw new Error('failed ' + res.status)})
+      .then(() => this.finishSavingEditing(event))
+      .catch(err => {
+        console.error(err)
+        this.setState({
+          working: false
         })
       })
+  }
+
+  finishSavingEditing = event => {
+    const events = [event, ...this.state.events.filter(x => x.id !== event.id)]
+
+    this.setState({
+      working: false,
+      editing: false,
+      adding: false,
+      page: 'list',
+      events,
+      upcoming: getResponsibilitiesAfterNow(events, 8)
+    })
+  }
+
+  cancelEditing = () => {
+     this.setState({
+      editing: false,
+      adding: false,
+      page: 'list'
+    })
+  }
+
+  addNewEvent = () => {
+    this.setState({
+      page: 'add',
+      adding: true
+    })
+  }
+
+  deleteEvent = event => {
+    console.log('deleteEvent event:', event)
+
+    this.setState({working: true})
+    const id = event.id
+
+    fetch(`https://lists.codeite.aq/list/~/resps/_/${id}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    })
+      .then(res => {if(!res.ok) throw new Error('failed ' + res.status)})
+      .then(() => this.finishDeleting(id))
+      .catch(err => {
+        console.error(err)
+        this.setState({
+          working: false
+        })
+      })
+  }
+
+  finishDeleting = id => {
+    const events = [...this.state.events.filter(x => x.id !== id)]
+
+    this.setState({
+      working: false,
+      editing: false,
+      page: 'list',
+      events,
+      upcoming: getResponsibilitiesAfterNow(events, 8)
+    })
   }
 
   render() {
@@ -38,41 +140,114 @@ class Resps extends Component {
       setPage: page => this.setState({page}),
       page: this.state.page
     }
-    const onEditEvent = eventId => {
-      this.setState({
-        page: 'edit',
-        editing: eventId
-      })
-    }
+
     return <div className='Resps'>
       <RespsTabs>
         <RespsTab to='main' {...respsTabProps} >Upcoming</RespsTab>
         <RespsTab to='list' {...respsTabProps} >List</RespsTab>
-        {this.state.page === 'edit' && <RespsTab to='edit' {...respsTabProps} >Edit</RespsTab>}
+        {this.state.editing && <RespsTab to='edit' {...respsTabProps} >Edit</RespsTab>}
+        {this.state.adding && <RespsTab to='add' {...respsTabProps} >Add</RespsTab>}
+        page={this.state.page}
+        <img alt='' src='/squares.svg' className={this.state.working && 'show'} />
       </RespsTabs>
       <RespTabsBody>
         {this.state.page === 'main' && <UpcomingItems upcoming={this.state.upcoming}/> }
-        {this.state.page === 'list' && <ListEvents events={this.state.events} onEditEvent={onEditEvent} /> }
-        {this.state.page === 'edit' && <ListEvents events={this.state.events} /> }
+        {this.state.page === 'list' && <ListEventsPage events={this.state.events} onEditEvent={this.startEditing} onAddNewEvent={this.addNewEvent} /> }
+        {this.state.page === 'edit' && <EditEventContainer event={this.state.editing} saveEditing={this.saveEditing} onCancel={this.cancelEditing} onDelete={this.deleteEvent}/> }
+        {this.state.page === 'add' && <EditEventContainer event={null} saveEditing={this.saveEditing} onCancel={this.cancelEditing} /> }
       </RespTabsBody>
     </div>
   }
 }
 
-function ListEvents ({events}) {
+export class EditEventContainer extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      editing: props.event || {
+        adding: true,
+        id: uuid(),
+        name: '',
+        schedule: moment().format('YYYY-MM-DD')
+      }
+    }
+  }
+
+  editField = (id, fieldName, newValue) => {
+    const editing = {...this.state.editing}
+    editing[fieldName] = newValue
+    this.setState({editing})
+  }
+
+  onDone = () => {
+    console.log('this.state.editing:', this.state.editing)
+    this.props.saveEditing(this.state.editing)
+  }
+
+  onDelete = () => {
+    console.log('onDelete this.state.editing:', this.state.editing)
+    this.props.onDelete(this.state.editing)
+  }
+
+  render () {
+    return <EditEvent {...this.props} onDone={this.onDone} editing={this.state.editing} onEdit={this.editField} onDelete={this.onDelete} />
+  }
+}
+
+function EditEvent ({editing, onEdit, onDone, onCancel, onDelete}) {
+  const onSubmit = e => {
+    e.preventDefault()
+    onDone()
+  }
+
+  return <form className='EditEvent' onSubmit={onSubmit}>
+    <div className='EditEvent-section'>
+      <label className='EditEvent-label'>Name</label>
+      <input value={editing.name} onChange={e => onEdit(editing.id, 'name', e.target.value)}  className='EditEvent-input' />
+    </div>
+    <div className='EditEvent-section'>
+      <label className='EditEvent-label'>Schedule</label>
+      <input value={editing.schedule} onChange={e => onEdit(editing.id, 'schedule', e.target.value)}  className='EditEvent-input' />
+    </div>
+    <div className='EditEvent-buttonSection'>
+      {!editing.adding && <input type='submit' value='Save'/>}
+      {editing.adding && <input type='submit' value='Add'/>}
+      {!editing.adding && <input type='button' value='Delete' onClick={onDelete} />}
+      <input type='button' value='Cancel' onClick={onCancel} />
+    </div>
+  </form>
+}
+
+function ListEventsPage ({onAddNewEvent, ...props}) {
+  return <div className='ListEventsPage' >
+    <ListEventsContainer {...props} />
+    <button onClick={() => onAddNewEvent()}>Add new Event</button>
+  </div>
+}
+
+function ListEventsContainer ({events, onEditEvent}) {
+  return <div className='ListEventsContainer' >
+    <ListEvents events={events} onEditEvent={onEditEvent} />
+
+  </div>
+}
+
+function ListEvents ({events, onEditEvent}) {
   return <ul className='ListEvents'>
     {events.map(evt => <li key={evt.id}>
-      <ListEvent event={evt} />
+      <ListEvent event={evt} onEditEvent={() => onEditEvent(evt.id)}/>
     </li>)}
   </ul>
 }
 
-function ListEvent ({event}) {
-  return <div className='ListEvent' >
-    <span className='ListEvent-name'>{event.name}</span>
-    <span className='ListEvent-schedule'>{event.schedule}</span>
-    <button className='ListEvent-edit'>🖊</button>
-  </div>
+function ListEvent ({event, onEditEvent}) {
+  return <button className='ListEvent' onClick={onEditEvent} >
+    <div className='ListEvent-text'>
+      <div className='ListEvent-name'>{event.name}</div>
+      <div className='ListEvent-schedule'>{event.schedule}</div>
+    </div>
+  </button>
 }
 
 function RespsTabs ({children}) {

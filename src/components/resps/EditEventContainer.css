@@ -1,0 +1,23 @@
+
+.EditEvent {
+  padding: 4px;
+}
+
+.EditEvent-section {
+  padding: 4px;
+}
+
+.EditEvent-label {
+  display: block;
+}
+
+.EditEvent-input {
+  margin-left: 10px;
+  width: 220px;
+}
+
+.EditEvent-buttonSection {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px;
+}

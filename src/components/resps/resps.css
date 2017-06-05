@@ -5,14 +5,27 @@
 }
 
 .RespsTabs {
-  padding: 3px;
-  padding-top: 4px;
-  margin-bottom: -1px;
+  padding: 3px 4px 0px 4px;
+  margin-bottom: 0px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.RespsTabs > img {
+  display: none;
+  margin: 0px 2px 0px auto;
+  padding: 0px;
+  position: relative;
+}
+
+.RespsTabs > img.show {
+  display: inline;
 }
 
 .RespsTab {
-  padding: 4px;
-  margin: -3px 2px;
+  padding: 4px 4px 7px;
+  margin: 0px 2px;
   background: #CDC;
   border: 0px solid black;
   text-decoration: none;
@@ -29,21 +42,23 @@
 .RespsTab.selected {
   border-bottom: 0px solid white;
   background: white;
-  margin: -3px 3px -3px 1px;
   box-shadow: 5px 5px 5px #353;
 }
 
 .RespTabsBody {
+  padding: 0;
+  margin: 0;
+  height: 320px;
   position: relative;
   z-index: 1;
   background-color: white;
   box-shadow: 5px 5px 5px #353;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 .UpcomingItems {
   margin: 0;
-  padding: 2px 0px;
+  padding: 0;
 }
 
 .UpcomingItem {
@@ -94,37 +109,114 @@
 .UpcomingItem_done-box {
   margin-left: auto; }
 
+.ListEventsPage {
+  background: white;
+  padding: 5px;
+  margin: 0px;
+}
+
+.ListEventsPage > button {
+  margin: 5px;
+  width: calc(100% - 10px)
+}
+
+.ListEventsContainer {
+  padding: 5px;
+  background: #dddddd;
+  overflow-y: auto;
+  height: 270px;
+  margin: 0;
+}
+
+.ListEvents::before {
+  content: "";
+  display: block;
+  box-shadow: inset 2px 2px 4px #444;
+  position: absolute;
+  margin: 5px;
+  top: 0;
+  left: 0;
+  width: calc(100% - 10px);
+  height: 280px;
+  pointer-events: none;
+}​
+.something-after-before {
+  margin: 0;
+}
+
 .ListEvents {
   list-style-type: none;
-  padding: 2px 2px 3px 2px;
+  background: #dddddd;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+}
+
+ul.ListEvents > li {
+  padding: 0;
   margin: 0;
 }
 
 .ListEvent {
-  display: grid;
-  grid-template: 17px 15px / 1fr 25px;
-  padding: 3px 2px;
+  display: block;
+  margin: 3px;
+  background: white;
+  box-shadow: 2px 2px 4px #444;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  font-size: 13px;
+  width: calc(100% - 6px);
+}
+
+.ListEvent:hover {
+  box-shadow: 3px 3px 4px #444;
+}
+
+.ListEvent-text {
+  margin-right: auto;
+  padding: 2px;
 }
 
 .ListEvent-name {
   overflow: hidden;
   text-overflow: ellipsis;
-  grid-row: 1;
+  white-space: nowrap;
 }
 
 .ListEvent-schedule {
   overflow: hidden;
   text-overflow: ellipsis;
-  grid-row: 2;
   font-size: smaller;
-
 }
 
 .ListEvent-edit {
   display: inline-block;
-  grid-column: 2;
-  grid-row: 1 / 3;
   border: 0px;
   background: transparent;
   cursor: pointer;
+}
+
+.EditEvent {
+  padding: 4px;
+}
+
+.EditEvent-section {
+  padding: 4px;
+}
+
+.EditEvent-label {
+  display: block;
+}
+
+.EditEvent-input {
+  margin-left: 10px;
+  width: 220px;
+}
+
+.EditEvent-buttonSection {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px;
 }
