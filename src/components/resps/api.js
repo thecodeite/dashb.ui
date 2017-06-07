@@ -1,7 +1,18 @@
-import {toRange, toArray} from './number-range'
-
 const tld = window.location.hostname.substr(window.location.hostname.lastIndexOf('.') + 1)
 const server = `https://lists.codeite.${tld}`
+const loginPage = `https://auth.codeite.${tld}/login`
+
+export class HttpError extends Error {
+  constructor(message, filename, lineNumber, status) {
+    super(message, filename, lineNumber)
+    this.status = status
+  }
+}
+
+HttpError.check = res => {
+  if (res.ok) return res
+  throw new HttpError('failed ' + res.status, null, null, res.status)
+}
 
 export class RespsApi {
   constructor (onError) {
@@ -9,27 +20,17 @@ export class RespsApi {
       this.onError = onError
     } else {
       this.onError = (url, err) => {
-        console.error(url, err)
-        alert('error occured')
+        console.error(url, err, err.status)
+
+        if (err.status === 401) {
+          if (tld !== 'aq' || confirm('Authentication issue. Login?')) {
+            window.location = loginPage + `?redirect=${window.location}`
+          }
+        } else {
+          alert('error occured' + err)
+        }
       }
     }
-  }
-
-  setDone = (checked, eventIdSeq) => {
-    const [id, seqStr] = eventIdSeq.split('_')
-    const seq = Number(seqStr)
-
-    return this.loadResp(id)
-      .then (event => {
-        const existing = new Set(toArray(event.complete))
-
-        if (checked) existing.add(seq)
-        else existing.delete(seq)
-
-        const complete = toRange([...existing])
-        const args = {id, complete}
-        return this.saveEditing(args).then(() => args)
-      })
   }
 
   loadResp = id => {
@@ -37,6 +38,7 @@ export class RespsApi {
     return fetch(url, {
       credentials: 'include'
     })
+    .then(HttpError.check)
     .then(res => res.json())
     .catch(err => this.onError(url, err))
   }
@@ -46,6 +48,12 @@ export class RespsApi {
     return fetch(url, {
       credentials: 'include'
     })
+    .then(res => {
+      console.log('res.ok:', res.ok)
+      return res
+
+    })
+    .then(HttpError.check)
     .then(res => res.json())
     .then(events => {
       return Object.keys(events).map(id => ({id, ...events[id]}))
@@ -65,8 +73,8 @@ export class RespsApi {
       },
       body: JSON.stringify(update)
     })
-      .then(res => {if(!res.ok) throw new Error(`failed to retreive "${url}" : ${res.status}`)})
-      .catch(err => this.onError(url, err))
+    .then(HttpError.check)
+    .catch(err => this.onError(url, err))
   }
 
   deleteEvent = eventId => {
@@ -77,7 +85,7 @@ export class RespsApi {
       method: 'DELETE',
       credentials: 'include'
     })
-      .then(res => {if(!res.ok) throw new Error('failed ' + res.status)})
-      .catch(err => this.onError(url, err))
+    .then(HttpError.check)
+    .catch(err => this.onError(url, err))
   }
 }

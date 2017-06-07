@@ -1,6 +1,8 @@
 import moment from 'moment'
 import uuid from 'uuid'
 
+import {toRange, toArray} from './number-range'
+
 export class RespsController {
   constructor (api, respsStore, tabStore) {
     this.api = api
@@ -9,7 +11,20 @@ export class RespsController {
   }
 
   setDone = (checked, eventIdSeq) => {
-    return this.api.setDone(checked, eventIdSeq)
+    const [id, seqStr] = eventIdSeq.split('_')
+    const seq = Number(seqStr)
+
+    return this.loadResp(id)
+      .then (event => {
+        const existing = new Set(toArray(event.complete))
+
+        if (checked) existing.add(seq)
+        else existing.delete(seq)
+
+        const complete = toRange([...existing])
+        const args = {id, complete}
+        return this.saveEditing(args).then(() => args)
+      })
       .then(({id, complete}) => {
         const oldEvents = this.respsStore.get('events')
         const event = {...oldEvents.find(x => x.id === id), complete}
