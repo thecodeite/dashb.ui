@@ -14,7 +14,7 @@ export class RespsController {
     const [id, seqStr] = eventIdSeq.split('_')
     const seq = Number(seqStr)
 
-    return this.loadResp(id)
+    return this.api.loadResp(id)
       .then (event => {
         const existing = new Set(toArray(event.complete))
 
@@ -23,7 +23,7 @@ export class RespsController {
 
         const complete = toRange([...existing])
         const args = {id, complete}
-        return this.saveEditing(args).then(() => args)
+        return this.api.saveEditing(args).then(() => args)
       })
       .then(({id, complete}) => {
         const oldEvents = this.respsStore.get('events')
