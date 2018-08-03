@@ -23,11 +23,11 @@ export class RespsApi {
         console.error(url, err, err.status)
 
         if (err.status === 401) {
-          if (tld !== 'aq' || confirm('Authentication issue. Login?')) {
+          if (tld !== 'aq' || window.confirm('Authentication issue. Login?')) {
             window.location = loginPage + `?redirect=${window.location}`
           }
         } else {
-          alert('error occured' + err)
+          window.alert('error occured' + err)
         }
       }
     }

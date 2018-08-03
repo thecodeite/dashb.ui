@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@codeite/upcoming-responsibilities": "^1.1.0",
+    "@codeite/upcoming-responsibilities": "1.2.2",
     "iso8601-repeating-interval": "^0.1.4",
     "isomorphic-fetch": "^2.2.1",
     "must": "^0.13.4",
@@ -16,7 +16,7 @@
     "enzyme": "^2.8.2",
     "enzyme-to-json": "^1.5.1",
     "react-addons-test-utils": "^15.5.1",
-    "react-scripts": "0.9.5",
+    "react-scripts": "1.1.4",
     "react-test-renderer": "^15.5.4"
   },
   "scripts": {
@@ -24,6 +24,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "publish": "rsync -avz --delete ./build/ sam@helium:~/webs/dashb.codeite.net/static/"
+    "deploy:live": "rsync -avz --delete ./build/ sam@helium:~/webs/dashb.codeite.net/static/"
   }
 }
