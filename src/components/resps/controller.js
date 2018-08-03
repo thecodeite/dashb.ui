@@ -1,7 +1,7 @@
 import moment from 'moment'
 import uuid from 'uuid'
 
-import {toRange, toArray} from './number-range'
+import {toRange, toArray} from '@codeite/upcoming-responsibilities'
 
 export class RespsController {
   constructor (api, respsStore, tabStore) {

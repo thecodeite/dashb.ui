@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import moment from 'moment'
 
 import './UpcomingPageContainer.css'
-import {getResponsibilitiesAfterNow} from './upcomingResponsibilitiesService'
+import {getResponsibilitiesAfterNow} from '@codeite/upcoming-responsibilities'
 import ExtendedComponent from '../common/ExtendedComponent'
 
 const getResps = events => getResponsibilitiesAfterNow(events, 8)
@@ -55,15 +55,18 @@ function UpcomingItems ({upcoming, working, handlers}) {
 }
 */
 
-function UpcomingItem ({id, name, overdue, soon, date, done, working, complete, handlers: {onMarkDone}}) {
-  return <li className={'UpcomingItem' + (overdue ? ' overdue' : '') + (soon ? ' soon' : '')}>
+function UpcomingItem ({id, name, overdue, soon, date, done, working, isDue, dueDate, handlers: {onMarkDone}}) {
+  return <li className={'UpcomingItem' + (overdue ? ' overdue' : '') + (soon ? ' soon' : '')+ (isDue ? ' isDue' : '')}>
     <time className='UpcomingItem_schedule' dateTime={date}>
       <span className='UpcomingItem_schedule_date'>{moment(date).format('DD')}</span>
       <span className='UpcomingItem_schedule_rest'>{moment(date).format('MMM YYYY')}</span>
     </time>
     <div>
       <div className='UpcomingItem_name' title={name} >{name}</div>
-      <div className='UpcomingItem_until' ><DurationDescription date={date} /></div>
+      <div className='UpcomingItem_until' >
+        <DurationDescription date={date} />
+        {isDue&&<span> (due: <DurationDescription date={dueDate} />)</span>}
+      </div>
     </div>
 
     <div className='UpcomingItem_done-box'>

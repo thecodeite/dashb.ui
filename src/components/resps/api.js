@@ -1,6 +1,6 @@
 const tld = window.location.hostname.substr(window.location.hostname.lastIndexOf('.') + 1)
-const server = `https://lists.codeite.${tld}`
-const loginPage = `https://auth.codeite.${tld}/login`
+const server = `//lists.codeite.${tld}`
+const loginPage = `//auth.codeite.${tld}/login`
 
 export class HttpError extends Error {
   constructor(message, filename, lineNumber, status) {

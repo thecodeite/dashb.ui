@@ -57,7 +57,15 @@ function EditEvent ({editing, onEdit, onDone, onCancel, onDelete}) {
     </div>
     <div className='EditEvent-section'>
       <label className='EditEvent-label'>Schedule</label>
-      <input value={editing.schedule} onChange={e => onEdit(editing.id, 'schedule', e.target.value)}  className='EditEvent-input' />
+      <input value={editing.schedule} onChange={e => onEdit(editing.id, 'schedule', e.target.value)}  className='EditEvent-input' placeholder="R/2018-04-03/P1M"/>
+    </div>
+    <div className='EditEvent-due'>
+      <label className='EditEvent-label'>Due</label>
+      <input value={editing.due} onChange={e => onEdit(editing.id, 'due', e.target.value)}  className='EditEvent-input' placeholder="P1Y2M3DT4H5M6S" />
+    </div>
+    <div className='EditEvent-complete'>
+      <label className='EditEvent-label'>Complete</label>
+      <input value={editing.complete} onChange={e => onEdit(editing.id, 'complete', e.target.value)}  className='EditEvent-input' placeholder="P1Y2M3DT4H5M6S" />
     </div>
     <div className='EditEvent-buttonSection'>
       <input type='submit' value={editing.id?'Save':'Add'}/>

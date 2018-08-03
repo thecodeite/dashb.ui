@@ -43,7 +43,10 @@ function ListEvent ({event, onEditEvent}) {
   return <button className='ListEvent' onClick={onEditEvent} >
     <div className='ListEvent-text'>
       <div className='ListEvent-name'>{event.name}</div>
-      <div className='ListEvent-schedule'>{event.schedule}</div>
+      <div className='ListEvent-schedule'>
+        {event.schedule}
+        {event.due && <span className='ListEvent-due'>{' '}({event.due})</span>}
+      </div>
     </div>
   </button>
 }
