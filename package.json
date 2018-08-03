@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@codeite/upcoming-responsibilities": "^1.1.0",
     "iso8601-repeating-interval": "^0.1.4",
     "isomorphic-fetch": "^2.2.1",
     "must": "^0.13.4",

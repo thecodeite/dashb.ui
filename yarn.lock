@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@codeite/upcoming-responsibilities@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@codeite/upcoming-responsibilities/-/upcoming-responsibilities-1.0.2.tgz#6a2781af877ccc1f185e66b7e5e3509a37fa777a"
+"@codeite/upcoming-responsibilities@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@codeite/upcoming-responsibilities/-/upcoming-responsibilities-1.1.0.tgz#2eec7c5c51b12bfed313b85740035a38e92ac298"
   dependencies:
     iso8601-repeating-interval "^0.1.4"
     moment "^2.22.2"
