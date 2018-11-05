@@ -12,7 +12,7 @@ export class EditEventContainer extends ExtendedComponent {
     this.bind(this.props.controller.respsStore, 'editing', {})
   }
 
-  editField = (id, fieldName, newValue) => {
+  editField = (fieldName, newValue) => {
     const editing = {...this.state.editing}
     editing[fieldName] = newValue
     this.setState({editing})
@@ -53,19 +53,23 @@ function EditEvent ({editing, onEdit, onDone, onCancel, onDelete}) {
   return <form className='EditEvent' onSubmit={onSubmit}>
     <div className='EditEvent-section'>
       <label className='EditEvent-label'>Name</label>
-      <input value={editing.name} onChange={e => onEdit(editing.id, 'name', e.target.value)}  className='EditEvent-input' />
+      <input value={editing.name} onChange={e => onEdit('name', e.target.value)}  className='EditEvent-input' />
     </div>
     <div className='EditEvent-section'>
       <label className='EditEvent-label'>Schedule</label>
-      <input value={editing.schedule} onChange={e => onEdit(editing.id, 'schedule', e.target.value)}  className='EditEvent-input' placeholder="R/2018-04-03/P1M"/>
+      <input value={editing.schedule} onChange={e => onEdit('schedule', e.target.value)}  className='EditEvent-input' placeholder="R/2018-04-03/P1M"/>
     </div>
     <div className='EditEvent-due'>
       <label className='EditEvent-label'>Due</label>
-      <input value={editing.due} onChange={e => onEdit(editing.id, 'due', e.target.value)}  className='EditEvent-input' placeholder="P1Y2M3DT4H5M6S" />
+      <input value={editing.due} onChange={e => onEdit('due', e.target.value)}  className='EditEvent-input' placeholder="P1Y2M3DT4H5M6S" />
     </div>
     <div className='EditEvent-complete'>
       <label className='EditEvent-label'>Complete</label>
-      <input value={editing.complete} onChange={e => onEdit(editing.id, 'complete', e.target.value)}  className='EditEvent-input' placeholder="P1Y2M3DT4H5M6S" />
+      <input value={editing.complete} onChange={e => onEdit('complete', e.target.value)}  className='EditEvent-input' placeholder="P1Y2M3DT4H5M6S" />
+    </div>
+    <div className='EditEvent-until'>
+      <label className='EditEvent-until'>Until</label>
+      <input value={editing.until} onChange={e => onEdit('until', e.target.value)}  className='EditEvent-input' placeholder="2020-01-01" />
     </div>
     <div className='EditEvent-buttonSection'>
       <input type='submit' value={editing.id?'Save':'Add'}/>
